@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Learning Assistant</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Onboarding Screen -->
+        <div id="onboarding-screen" class="fade-up">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Logo" class="logo">
+            <h1>Language Learning Assistant</h1>
+            <p class="subtitle">Practice conversations in any language with intelligent feedback</p>
+            
+            <div class="card">
+                <div class="progress-steps">
+                    <div class="step-indicator" data-step="1"></div>
+                    <div class="step-indicator" data-step="2"></div>
+                    <div class="step-indicator" data-step="3"></div>
+                </div>
+
+                <form id="onboarding-form" onsubmit="return false;">
+                    <!-- Step 1: Name -->
+                    <div class="step" id="step-1">
+                        <div class="form-group">
+                            <label for="name" class="form-label">What's your name?</label>
+                            <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                        
+                        <div class="nav-buttons">
+                            <div></div>
+                            <button type="button" class="btn btn-primary" onclick="handleNext(1)">
+                                Continue
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Language Selection -->
+                    <div class="step" id="step-2" style="display: none;">
+                        <div class="form-group">
+                            <label for="native-lang" class="form-label">Your native language</label>
+                            <select id="native-lang" class="form-control" required>
+                                <option value="">Select language</option>
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ru">Russian</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="learning-lang" class="form-label">Language you want to practice</label>
+                            <select id="learning-lang" class="form-control" required>
+                                <option value="">Select language</option>
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ru">Russian</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                            </select>
+                        </div>
+                        
+                        <div class="nav-buttons">
+                            <button type="button" class="btn btn-outline" onclick="handlePrev(2)">
+                                <i class="fas fa-arrow-left"></i>
+                                Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="handleNext(2)">
+                                Continue
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Scenario Selection -->
+                    <div class="step" id="step-3" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Choose a conversation scenario</label>
+                            <div class="scenarios">
+                                <div class="scenario-card" onclick="selectScenario(this, 'restaurant')" tabindex="0" role="button">
+                                    <div class="scenario-icon">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <h4 class="scenario-title">Restaurant</h4>
+                                    <p class="scenario-desc">Order food & drinks</p>
+                                </div>
+                                
+                                <div class="scenario-card" onclick="selectScenario(this, 'shopping')" tabindex="0" role="button">
+                                    <div class="scenario-icon">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <h4 class="scenario-title">Shopping</h4>
+                                    <p class="scenario-desc">Buy clothes & items</p>
+                                </div>
+                                
+                                <div class="scenario-card" onclick="selectScenario(this, 'travel')" tabindex="0" role="button">
+                                    <div class="scenario-icon">
+                                        <i class="fas fa-plane"></i>
+                                    </div>
+                                    <h4 class="scenario-title">Travel</h4>
+                                    <p class="scenario-desc">Airport & hotel</p>
+                                </div>
+                                
+                                <div class="scenario-card" onclick="selectScenario(this, 'casual')" tabindex="0" role="button">
+                                    <div class="scenario-icon">
+                                        <i class="fas fa-comments"></i>
+                                    </div>
+                                    <h4 class="scenario-title">Casual</h4>
+                                    <p class="scenario-desc">Daily chat</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="nav-buttons">
+                            <button type="button" class="btn btn-outline" onclick="handlePrev(3)">
+                                <i class="fas fa-arrow-left"></i>
+                                Back
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="startConversation()">
+                                Start Chat
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Chat Screen -->
+        <div id="chat-screen" class="fade-up" style="display: none;">
+            <div class="chat-card">
+                <div class="chat-header">
+                    <div class="chat-info">
+                        <div class="language-badge">
+                            <i class="fas fa-language"></i>
+                            <span id="learning-language-display">English</span>
+                        </div>
+                        <div class="scenario-badge">
+                            <i class="fas fa-utensils"></i>
+                            <span id="scenario-display">At a Restaurant</span>
+                        </div>
+                    </div>
+                    <button class="btn-end-session" onclick="endSession()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        End Session
+                    </button>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <div class="welcome-message">
+                        <h3>Ready to practice!</h3>
+                        <p>Start chatting in your learning language. The assistant will respond and provide feedback on your messages.</p>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <form id="message-form" onsubmit="sendMessage(event)">
+                        <div class="input-group">
+                            <input type="text" id="message-input" class="form-control" 
+                                   placeholder="Type your message in your learning language..." required>
+                            <button type="submit" class="btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        let currentStep = 1;
+        let selectedScenario = null;
+
+        // Update progress indicators
+        function updateProgress(step) {
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index + 1 === step);
+            });
+        }
+
+        // Handle next step
+        function handleNext(step) {
+            const currentStepElement = document.getElementById(`step-${step}`);
+            const nextStepElement = document.getElementById(`step-${step + 1}`);
+            
+            // Validate current step
+            if (step === 1) {
+                const name = document.getElementById('name');
+                if (!name.value.trim()) {
+                    name.focus();
+                    return;
+                }
+            } else if (step === 2) {
+                const nativeLang = document.getElementById('native-lang');
+                const learningLang = document.getElementById('learning-lang');
+                if (!nativeLang.value || !learningLang.value) {
+                    if (!nativeLang.value) nativeLang.focus();
+                    else learningLang.focus();
+                    return;
+                }
+            }
+            
+            // Hide current step
+            currentStepElement.style.display = 'none';
+            // Show next step
+            nextStepElement.style.display = 'block';
+            // Update progress
+            currentStep = step + 1;
+            updateProgress(currentStep);
+        }
+
+        // Handle previous step
+        function handlePrev(step) {
+            const currentStepElement = document.getElementById(`step-${step}`);
+            const prevStepElement = document.getElementById(`step-${step - 1}`);
+            
+            // Hide current step
+            currentStepElement.style.display = 'none';
+            // Show previous step
+            prevStepElement.style.display = 'block';
+            // Update progress
+            currentStep = step - 1;
+            updateProgress(currentStep);
+        }
+
+        // Initialize progress indicator
+        updateProgress(1);
+
+        function selectScenario(element, scenario) {
+            // Remove selected class from all scenarios
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            // Add selected class to clicked scenario
+            element.classList.add('selected');
+            selectedScenario = scenario;
+        }
+        
+        async function startConversation() {
+            if (!selectedScenario) {
+                alert('Please select a conversation scenario');
+                return;
+            }
+            
+            const name = document.getElementById('name').value;
+            const nativeLang = document.getElementById('native-lang').value;
+            const learningLang = document.getElementById('learning-lang').value;
+            
+            // Show loading state
+            document.getElementById('loading').style.display = 'flex';
+            
+            try {
+                const response = await fetch('/api/start-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        native_language: nativeLang,
+                        learning_language: learningLang,
+                        scenario: selectedScenario
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update display elements
+                    document.getElementById('learning-language-display').textContent = 
+                        document.getElementById('learning-lang').options[document.getElementById('learning-lang').selectedIndex].text;
+                    document.getElementById('scenario-display').textContent = 
+                        selectedScenario.charAt(0).toUpperCase() + selectedScenario.slice(1);
+                    
+                    // Switch to chat screen
+                    document.getElementById('onboarding-screen').style.display = 'none';
+                    document.getElementById('chat-screen').style.display = 'block';
+                    
+                    // Add welcome message
+                    addMessage('bot', data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to start conversation. Please try again.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function addMessage(type, content) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            
+            const contentP = document.createElement('p');
+            contentP.textContent = content;
+            messageDiv.appendChild(contentP);
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        async function sendMessage(event) {
+            event.preventDefault();
+            
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message immediately
+            addMessage('user', message);
+            input.value = '';
+            input.focus();
+            
+            // Show loading state
+            document.getElementById('loading').style.display = 'flex';
+            
+            try {
+                const response = await fetch('/api/send-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Add bot's response
+                    addMessage('bot', data.response);
+                    
+                    // If there are mistakes, show them
+                    if (data.mistakes && data.mistakes.length > 0) {
+                        addMistakes(data.mistakes);
+                    }
+                } else {
+                    addMessage('bot', 'Sorry, there was an error. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('bot', 'Sorry, there was an error. Please try again.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function addMistakes(mistakes) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const mistakesDiv = document.createElement('div');
+            mistakesDiv.className = 'mistakes-feedback';
+            
+            mistakes.forEach(mistake => {
+                const mistakeDiv = document.createElement('div');
+                mistakeDiv.className = 'mistake-item';
+                mistakeDiv.innerHTML = `
+                    <p class="mistake-text">${mistake.text}</p>
+                    <p class="mistake-correction">${mistake.correction}</p>
+                    <p class="mistake-explanation">${mistake.explanation}</p>
+                `;
+                mistakesDiv.appendChild(mistakeDiv);
+            });
+            
+            messagesContainer.appendChild(mistakesDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        async function endSession() {
+            if (!confirm('Are you sure you want to end this session?')) return;
+            
+            document.getElementById('loading').style.display = 'flex';
+            
+            try {
+                const response = await fetch('/api/end-session', {
+                    method: 'POST',
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to end session. Please try again.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,164 @@
+import json
+
+# Define a minimal Jupyter notebook structure
+notebook = {
+    "cells": [
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Language Learning Chatbot\n",
+                "\n",
+                "This notebook implements an interactive language learning assistant that helps users practice conversations in their target language, tracks mistakes, and provides personalized feedback."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "## Configuration\n",
+                "\n",
+                "The chatbot uses the following configuration settings from the .env file:\n",
+                "- OPENAI_API_KEY: Your OpenAI API key\n",
+                "- LANGUAGE_MODEL: The language model to use (e.g., gpt-4o-mini)\n",
+                "- TEMPERATURE: Controls the randomness of responses (0.0 to 1.0)"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Install required packages if needed\n",
+                "# !pip install openai langchain langchain-openai python-dotenv pydantic"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "import os\n",
+                "import json\n",
+                "import sqlite3\n",
+                "import openai\n",
+                "from dotenv import load_dotenv\n",
+                "from langchain.chains import LLMChain\n",
+                "from langchain_openai import ChatOpenAI\n",
+                "from langchain.prompts import ChatPromptTemplate\n",
+                "\n",
+                "# Load environment variables from .env file\n",
+                "load_dotenv()\n",
+                "\n",
+                "# Initialize OpenAI API key from environment variables\n",
+                "openai.api_key = os.getenv(\"OPENAI_API_KEY\")\n",
+                "\n",
+                "# Check the model being used\n",
+                "print(f\"Using language model: {os.getenv('LANGUAGE_MODEL', 'gpt-3.5-turbo')}\")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Import modules from our project\n",
+                "from db_manager import MistakeTracker\n",
+                "from language_learning_bot import LanguageLearningBot\n",
+                "\n",
+                "# Create a new language learning bot instance\n",
+                "bot = LanguageLearningBot()"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Get user information\n",
+                "print(\"Welcome to the Language Learning Bot!\")\n",
+                "bot.user_name = input(\"What's your name? \")\n",
+                "bot.native_language = input(\"What language do you speak natively? \")\n",
+                "bot.learning_language = input(\"What language would you like to learn? \")\n",
+                "\n",
+                "# Get proficiency level\n",
+                "print(f\"\\nWhat's your current level in {bot.learning_language}?\")\n",
+                "print(\"1. Beginner\")\n",
+                "print(\"2. Intermediate\")\n",
+                "print(\"3. Advanced\")\n",
+                "level_choice = input(\"Enter the number corresponding to your level: \")\n",
+                "\n",
+                "if level_choice == \"1\":\n",
+                "    bot.proficiency_level = \"beginner\"\n",
+                "elif level_choice == \"2\":\n",
+                "    bot.proficiency_level = \"intermediate\"\n",
+                "elif level_choice == \"3\":\n",
+                "    bot.proficiency_level = \"advanced\"\n",
+                "else:\n",
+                "    print(\"Invalid choice, defaulting to beginner.\")\n",
+                "    bot.proficiency_level = \"beginner\"\n",
+                "\n",
+                "# Select a conversation scene\n",
+                "print(\"\\nSelect a scene for your conversation:\")\n",
+                "print(\"1. At a restaurant\")\n",
+                "print(\"2. Shopping at a store\")\n",
+                "print(\"3. Asking for directions\")\n",
+                "print(\"4. Meeting new people\")\n",
+                "print(\"5. At a hotel\")\n",
+                "\n",
+                "scene_choice = input(\"Enter the number of your choice: \")\n",
+                "scenes = {\n",
+                "    \"1\": \"at a restaurant\",\n",
+                "    \"2\": \"shopping at a store\",\n",
+                "    \"3\": \"asking for directions\",\n",
+                "    \"4\": \"meeting new people\",\n",
+                "    \"5\": \"at a hotel\"\n",
+                "}\n",
+                "\n",
+                "bot.selected_scene = scenes.get(scene_choice, \"at a restaurant\")\n",
+                "print(f\"\\nGreat! We'll practice {bot.learning_language} in a scenario: {bot.selected_scene}.\")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Start the conversation\n",
+                "bot.start_session()"
+            ]
+        }
+    ],
+    "metadata": {
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.9.13"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 4
+}
+
+# Write the notebook to file
+with open('LanguageLearningBot.ipynb', 'w') as f:
+    json.dump(notebook, f, indent=2)
+
+print("Jupyter Notebook created: LanguageLearningBot.ipynb") 
